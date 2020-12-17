@@ -1,0 +1,45 @@
+﻿@page "/"
+@using BlazorApp.Connection.Client;
+@using Database.Entities.Interfaces;
+@inherits ClientPage;
+
+<div id="remote-player">
+    <div id="title"></div>
+    <img id="remote-thumbnail" />
+
+    <div id="control-bar">
+        <div id="btn-skip-back" class="btn"></div>
+        <div id="btn-play" class="btn"></div>
+        <div id="btn-pause" class="btn"></div>
+        <div id="btn-skip-forward" class="btn"></div>
+    </div>
+
+    <div id="subtitle-box"></div>
+
+    <div id="position-trackbar"></div>
+
+</div>
+
+<hr />
+
+<ul id="catalogus">
+    @foreach ( var movie in MovieCatalogus )
+    {
+        <li>@movie.Title</li>
+    }
+</ul>
+
+@code {
+    private string videoUrl = "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_30mb.mp4";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // await Context.SaveAsync();
+        await InitAsync();
+    }
+
+    private async Task Send()
+    {
+        await Sender.RequestPlayResourceAsync( videoUrl );
+    }
+}
