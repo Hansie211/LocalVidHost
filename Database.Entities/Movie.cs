@@ -11,6 +11,7 @@ namespace Database.Entities
         public string Filename { get; set; }
 
         public List<Genre> Genres { get; set; }
+        public List<Subtitle> Subtitles { get; set; }
         public Language Language { get; set; }
 
         public string IMDBIndex { get; set; }

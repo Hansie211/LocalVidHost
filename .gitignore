@@ -349,7 +349,8 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-BlazorApp/Storage
+/ServerApp/Storage
 *.mp4
 *.db
-BlazorApp/Migrations
+/ServerApp/Migrations
+/ClientApp/Migrations

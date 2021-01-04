@@ -1,4 +1,5 @@
 ﻿using Database.Entities;
+using Database.General;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,142 +10,88 @@ namespace DataTransferObjectLibrary
 {
     public static class DTOMapper
     {
-        private static Dictionary<Type, List<PropertyInfo>> PropertyCache { get; } = new Dictionary<Type, List<PropertyInfo>>();
-
-        static DTOMapper()
+        private static TDTO ToDTO<TDTO, TEntity>( TEntity entity ) where TDTO : IDataTransferObject<TEntity>, new() where TEntity : DatabaseRecord, new()
         {
-            var precacheTypes = new Type[]{ 
-                typeof(Episode), typeof(EpisodeDto),
-                typeof(Genre), typeof(GenreDto),
-                typeof(Language), typeof(LanguageDto),
-                typeof(Movie), typeof(MovieDto),
-                typeof(MovieMetadata), typeof(MovieMetadataDto),
-                typeof(Subtitle), typeof(SubtitleDto),
-                typeof(User), typeof(UserDto),
-            };
-
-            foreach( var type in precacheTypes )
-            {
-                GetProperties( type ); // build cache
-            }
-        }
-
-        private static IEnumerable<PropertyInfo> GetProperties( Type type )
-        {
-            if ( PropertyCache.TryGetValue( type, out List<PropertyInfo> value ) )
-            {
-                return value;
-            }
-
-            var list = type.GetProperties().Where( o => o.CanRead && o.CanWrite && o.SetMethod != null && o.GetMethod != null ).ToList();
-            PropertyCache.Add( type, list );
-            return list;
-        }
-
-        private static TOut PropertyCopy<TOut, TIn>( TIn obj ) where TOut : class, new()
-        {
-            TOut result = new TOut();
-            
-            var propsIn = GetProperties( typeof(TIn) );
-            var propsOut = GetProperties( typeof(TOut) );
-
-            foreach( var propIn in propsIn )
-            {
-                var propOut = propsOut.FirstOrDefault( o => o.Name.Equals( propIn.Name, StringComparison.OrdinalIgnoreCase ) );
-                if ( propOut is null )
-                {
-                    continue;
-                }
-
-                var value = propIn.GetValue( obj );
-                propOut.SetValue( result, value );
-            }
-
+            var result = new TDTO();
+            result.FromEntity( entity );
             return result;
         }
 
-        public static EpisodeDto ToEpisodeDTO( Episode Episode )
+        private static TEntity ToEntity<TEntity, TDTO>( TDTO dto ) where TEntity : DatabaseRecord, new() where TDTO : IDataTransferObject<TEntity>, new()
         {
-            var copy = PropertyCopy<EpisodeDto, Episode>( Episode );
-            return copy;
+            var result = new TEntity();
+            dto.ToEntity( result );
+            return result;
         }
 
-        public static Episode FromEpisodeDTO( EpisodeDto EpisodeDto )
+        public static EpisodeDto ToEpisodeDTO( Episode episode )
         {
-            var copy = PropertyCopy<Episode, EpisodeDto>( EpisodeDto );
-            return copy;
+            return ToDTO<EpisodeDto, Episode>( episode );
         }
 
-        public static GenreDto ToGenreDTO( Genre Genre )
+        public static Episode FromEpisodeDTO( EpisodeDto episodeDto )
         {
-            var copy = PropertyCopy<GenreDto, Genre>( Genre );
-            return copy;
+            return ToEntity<Episode, EpisodeDto>( episodeDto );
         }
 
-        public static Genre FromGenreDTO( GenreDto GenreDto )
+        public static GenreDto ToGenreDTO( Genre genre )
         {
-            var copy = PropertyCopy<Genre, GenreDto>( GenreDto );
-            return copy;
+            return ToDTO<GenreDto, Genre>( genre );
         }
 
-        public static LanguageDto ToLanguageDTO( Language Language )
+        public static Genre FromGenreDTO( GenreDto genreDto )
         {
-            var copy = PropertyCopy<LanguageDto, Language>( Language );
-            return copy;
+            return ToEntity<Genre, GenreDto>( genreDto );
         }
 
-        public static Language FromLanguageDTO( LanguageDto LanguageDto )
+        public static LanguageDto ToLanguageDTO( Language language )
         {
-            var copy = PropertyCopy<Language, LanguageDto>( LanguageDto );
-            return copy;
+            return ToDTO<LanguageDto, Language>( language );
         }
 
-        public static MovieDto ToMovieDTO( Movie Movie )
+        public static Language FromLanguageDTO( LanguageDto languageDto )
         {
-            var copy = PropertyCopy<MovieDto, Movie>( Movie );
-            return copy;
+            return ToEntity<Language, LanguageDto>( languageDto );
         }
 
-        public static Movie FromMovieDTO( MovieDto MovieDto )
+        public static MovieDto ToMovieDTO( Movie movie )
         {
-            var copy = PropertyCopy<Movie, MovieDto>( MovieDto );
-            return copy;
+            return ToDTO<MovieDto, Movie>( movie );
         }
 
-        public static MovieMetadataDto ToMovieMetadataDTO( MovieMetadata MovieMetadata )
+        public static Movie FromMovieDTO( MovieDto movieDto )
         {
-            var copy = PropertyCopy<MovieMetadataDto, MovieMetadata>( MovieMetadata );
-            return copy;
+            return ToEntity<Movie, MovieDto>( movieDto );
         }
 
-        public static MovieMetadata FromMovieMetadataDTO( MovieMetadataDto MovieMetadataDto )
+        public static MovieMetadataDto ToMovieMetadataDTO( MovieMetadata movieMetadata )
         {
-            var copy = PropertyCopy<MovieMetadata, MovieMetadataDto>( MovieMetadataDto );
-            return copy;
+            return ToDTO<MovieMetadataDto, MovieMetadata>( movieMetadata );
         }
 
-        public static SubtitleDto ToSubtitleDTO( Subtitle Subtitle )
+        public static MovieMetadata FromMovieMetadataDTO( MovieMetadataDto movieMetadataDto )
         {
-            var copy = PropertyCopy<SubtitleDto, Subtitle>( Subtitle );
-            return copy;
+            return ToEntity<MovieMetadata, MovieMetadataDto>( movieMetadataDto );
         }
 
-        public static Subtitle FromSubtitleDTO( SubtitleDto SubtitleDto )
+        public static SubtitleDto ToSubtitleDTO( Subtitle subtitle )
         {
-            var copy = PropertyCopy<Subtitle, SubtitleDto>( SubtitleDto );
-            return copy;
+            return ToDTO<SubtitleDto, Subtitle>( subtitle );
         }
 
-        public static UserDto ToUserDTO( User User )
+        public static Subtitle FromSubtitleDTO( SubtitleDto subtitleDto )
         {
-            var copy = PropertyCopy<UserDto, User>( User );
-            return copy;
+            return ToEntity<Subtitle, SubtitleDto>( subtitleDto );
         }
 
-        public static User FromUserDTO( UserDto UserDto )
+        public static UserDto ToUserDTO( User user )
         {
-            var copy = PropertyCopy<User, UserDto>( UserDto );
-            return copy;
+            return ToDTO<UserDto, User>( user );
+        }
+
+        public static User FromUserDTO( UserDto userDto )
+        {
+            return ToEntity<User, UserDto>( userDto );
         }
     }
 }
