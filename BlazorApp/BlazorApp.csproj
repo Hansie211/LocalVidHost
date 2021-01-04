@@ -14,10 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Catalogus.Movie\Catalogus.Movie.csproj" />
-    <ProjectReference Include="..\Database.Entities\Database.Entities.csproj" />
-    <ProjectReference Include="..\Database.Repository\Database.Repository.csproj" />
+    <ProjectReference Include="..\Catalogus.Movie\Catalogus.Movies.csproj" />
     <ProjectReference Include="..\Packages.SignalR.Communication\Packages.SignalR.Communication.csproj" />
+    <ProjectReference Include="..\SettingsLib\SettingsLib.csproj" />
   </ItemGroup>
 
 </Project>

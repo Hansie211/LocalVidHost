@@ -14,9 +14,19 @@ namespace BlazorApp.Connection.Client
         {
         }
 
-        public async Task RequestPlayResourceAsync( string resourceLocation )
+        public async Task RequestPlayResourceAsync( string moviePath )
         {
-            await ExecuteRemoteAsync( nameof(RemoteHub.RequestPlayResourceAsync), resourceLocation );
+            await ExecuteRemoteAsync( nameof(RemoteHub.RequestPlayResourceAsync), moviePath );
+        }
+
+        public async Task RequestChangePosition( double position )
+        {
+            await ExecuteRemoteAsync( nameof(RemoteHub.RequestChangePositionAsync), position );
+        }
+
+        public async Task RequestChangePlaystate( Player.Playstate playstate )
+        {
+            await ExecuteRemoteAsync( nameof(RemoteHub.RequestChangePlaystateAsync), playstate );
         }
 
         public async Task RequestServeInitalInfoAsync( string responseId )

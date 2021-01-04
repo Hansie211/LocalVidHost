@@ -1,7 +1,7 @@
 ﻿using BlazorApp.Components;
 using BlazorApp.Connection.Client;
 using BlazorApp.Player;
-using Catalogus.Movie;
+using Catalogus.Movies;
 using Microsoft.AspNetCore.Components;
 using Packages.SignalR.Communication.Attributes;
 using System;
@@ -14,11 +14,9 @@ namespace BlazorApp.Connection.Client
     public class ClientPage : MasterPage<ClientConnectionSender>
     {
         public Playstate RemotePlaystate { get; private set; }
-        public string RemoteResource { get; private set; }
+        public string RemoteMovie { get; private set; }
         public double RemotePosition { get; private set; }
-
-        [Inject]
-        public MovieCatalogus MovieCatalogus { get; set; }
+        public double RemoteDuration { get; private set; }
 
         protected override async Task InitAsync()
         {
@@ -35,9 +33,10 @@ namespace BlazorApp.Connection.Client
         }
 
         [CallableMethod]
-        public void OnSourceChanged( string resourceLocation )
+        public void OnSourceChanged( string moviePath )
         {
-            RemoteResource = resourceLocation;
+            RemoteMovie = moviePath;
+
             StateHasChanged();
         }
 
@@ -49,9 +48,17 @@ namespace BlazorApp.Connection.Client
         }
 
         [CallableMethod]
-        public void SetInitialInfo( string resourceLocation, Playstate playstate, double position )
+        public void OnDurationChanged( double value )
         {
-            RemoteResource  = resourceLocation;
+            RemoteDuration = value;
+            StateHasChanged();
+        }
+
+        [CallableMethod]
+        public void SetInitialInfo( string moviePath, Playstate playstate, double position, double duration )
+        {
+            RemoteMovie     = moviePath;
+            RemoteDuration  = duration;
             RemotePlaystate = playstate;
             RemotePosition  = position;
 

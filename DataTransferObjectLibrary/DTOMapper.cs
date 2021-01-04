@@ -10,34 +10,53 @@ namespace DataTransferObjectLibrary
     public static class DTOMapper
     {
         private static Dictionary<Type, List<PropertyInfo>> PropertyCache { get; } = new Dictionary<Type, List<PropertyInfo>>();
+        private static Dictionary<Type, List<string>> Blacklist { get; } = new Dictionary<Type, List<string>>();
 
         static DTOMapper()
         {
-            var precacheTypes = new Type[]{ 
-                typeof(Episode), typeof(EpisodeDto),
-                typeof(Genre), typeof(GenreDto),
-                typeof(Language), typeof(LanguageDto),
-                typeof(Movie), typeof(MovieDto),
-                typeof(MovieMetadata), typeof(MovieMetadataDto),
-                typeof(Subtitle), typeof(SubtitleDto),
-                typeof(User), typeof(UserDto),
-            };
+            ConfigureBlacklist();
+            PreCacheProperties();
+        }
 
-            foreach( var type in precacheTypes )
+        private static void ConfigureBlacklist()
+        {
+            Blacklist.Add( typeof( Movie ), new List<string>() { nameof( Movie.Genres ) } );
+            Blacklist.Add( typeof( MovieDto ), new List<string>() { nameof( MovieDto.Genres ) } );
+
+            Blacklist.Add( typeof( Episode ), new List<string>() { nameof( Movie.Genres ) } );
+            Blacklist.Add( typeof( EpisodeDto ), new List<string>() { nameof( MovieDto.Genres ) } );
+        }
+
+        private static void PreCacheProperties()
+        {
+            var methods = typeof(DTOMapper).GetMethods( BindingFlags.Public | BindingFlags.Static );
+            foreach ( var method in methods )
             {
-                GetProperties( type ); // build cache
+                var type = method.ReturnType;
+                PropertyCache.Add( type, GetTypeProperties( type ).ToList() );
             }
+        }
+
+        private static IEnumerable<PropertyInfo> GetTypeProperties( Type any )
+        {
+            var properties = any.GetProperties().Where( o => o.CanRead && o.CanWrite && o.SetMethod != null && o.GetMethod != null );
+            if ( Blacklist.TryGetValue(any, out List<string> blacklist) )
+            {
+                properties = properties.Where( o => !blacklist.Contains( o.Name) );
+            }
+
+            return properties;
         }
 
         private static IEnumerable<PropertyInfo> GetProperties( Type type )
         {
-            if ( PropertyCache.TryGetValue( type, out List<PropertyInfo> value ) )
+            List<PropertyInfo> list;
+            if ( !PropertyCache.TryGetValue( type, out list ) )
             {
-                return value;
+                list = GetTypeProperties( type ).ToList();
+                PropertyCache.Add( type, list );
             }
 
-            var list = type.GetProperties().Where( o => o.CanRead && o.CanWrite && o.SetMethod != null && o.GetMethod != null ).ToList();
-            PropertyCache.Add( type, list );
             return list;
         }
 
@@ -144,6 +163,18 @@ namespace DataTransferObjectLibrary
         public static User FromUserDTO( UserDto UserDto )
         {
             var copy = PropertyCopy<User, UserDto>( UserDto );
+            return copy;
+        }
+
+        public static SerieDto ToSerieDTO( Serie Serie )
+        {
+            var copy = PropertyCopy<SerieDto, Serie>( Serie );
+            return copy;
+        }
+
+        public static Serie FromSerieDTO( SerieDto SerieDto )
+        {
+            var copy = PropertyCopy<Serie, SerieDto>( SerieDto );
             return copy;
         }
     }

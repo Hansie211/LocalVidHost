@@ -208,6 +208,22 @@ namespace Packages.Database.JsonRepositories.Generic
             return (TEntity)Entities.Single( o => o.ID == id );
         }
 
+
+        public TEntity GetOrDefault( Guid id )
+        {
+            return (TEntity)Entities.FirstOrDefault( o => o.ID == id );
+        }
+
+        public TEntity GetOrDefault( Guid? id )
+        {
+            if ( id is null )
+            {
+                return default(TEntity);
+            }
+
+            return GetOrDefault( id.Value );
+        }
+
         public IEnumerable<TEntity> GetAll()
         {
             return Entities.Cast<TEntity>();

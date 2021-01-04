@@ -14,8 +14,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Database.Entities\Database.Entities.csproj" />
-  </ItemGroup>
-
 </Project>

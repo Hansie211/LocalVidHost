@@ -25,14 +25,19 @@ namespace BlazorApp.Connection.Server
             await ExecuteRemoteAsync( nameof( RemoteHub.RequestUpdatePositionAsync ), value );
         }
 
-        public async Task UpdateSource( string resourceLocation )
+        public async Task RequestUpdateDuration( double value )
         {
-            await ExecuteRemoteAsync( nameof( RemoteHub.RequestUpdateSourceAsync ), resourceLocation );
+            await ExecuteRemoteAsync( nameof(RemoteHub.RequestUpdateDurationAsync), value );
         }
 
-        public async Task ServeInitialInfo( string connectionId, string resourceLocation, Playstate playstate, double position )
+        public async Task UpdateSource( string moviePath )
         {
-            await ExecuteRemoteAsync( nameof( RemoteHub.RequestSetInitialInfoAsync ), connectionId, resourceLocation, playstate, position );
+            await ExecuteRemoteAsync( nameof( RemoteHub.RequestUpdateSourceAsync ), moviePath );
+        }
+
+        public async Task ServeInitialInfo( string connectionId, string moviePath, Playstate playstate, double position, double duration )
+        {
+            await ExecuteRemoteAsync( nameof( RemoteHub.RequestSetInitialInfoAsync ), connectionId, moviePath, playstate, position, duration );
         }
     }
 }

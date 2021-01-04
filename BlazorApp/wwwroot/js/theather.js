@@ -28,22 +28,31 @@ async function OnUpdateVideoSource(resourceLocation) {
 
 	var player = GetVideoPlayer();
 
+	console.log(`Play: ${resourceLocation}.`);
+
 	await player.Element.pause();
 	player.Source.src = resourceLocation;
-	player.Element.load();
-	await player.Element.play();
 
 	if (IsFirstVideo) {
+
 		var videoElement = GetVideoElement();
 
 		videoElement.addEventListener("timeupdate", function (event) {
-			console.log(videoElement.currentTime);
+			console.log(this.currentTime);
 
-			page.instace.invokeMethodAsync("OnUpdatePosition", videoElement.currentTime);
+			page.instace.invokeMethodAsync("OnUpdatePosition", this.currentTime);
 		});
+
+		videoElement.onloadedmetadata = function () {
+			console.log('metadata loaded!');
+			page.instace.invokeMethodAsync("OnUpdateDuration", this.duration);
+		};
 
 		IsFirstVideo = false;
 	}
+
+	player.Element.load();
+	await player.Element.play();
 }
 
 async function SetPlaystate(state) {

@@ -1,36 +1,69 @@
 ﻿@page "/"
 @using BlazorApp.Connection.Client;
-@using Database.Entities.Interfaces;
 @inherits ClientPage;
+@{ bool showPlay = RemotePlaystate != Player.Playstate.Play; }
 
-<div id="remote-player">
-    <div id="title"></div>
-    <img id="remote-thumbnail" />
+<div id="screen-client" class="screen">
+    <div id="title">@RemoteMovie</div>
 
     <div id="control-bar">
-        <div id="btn-skip-back" class="btn"></div>
-        <div id="btn-play" class="btn"></div>
-        <div id="btn-pause" class="btn"></div>
-        <div id="btn-skip-forward" class="btn"></div>
+        <div id="btn-skip-back" class="btn btn-primary" @onclick="OnClickBackward"><img src="/img/backward.png" /></div>
+        <div id="btn-play" class="btn btn-primary" @onclick="OnClickPlay"><img hidden="@(!showPlay)" src="/img/play.png" /><img src="/img/pause.png" hidden="@showPlay" /></div>
+        <div id="btn-skip-forward" class="btn btn-primary" @onclick="OnClickForward"><img src="/img/forward.png" /></div>
     </div>
 
-    <div id="subtitle-box"></div>
+    <div id="position-trackbar">
+        <input type="range" min="0" max="@RemoteDuration" value="@RemotePosition" class="form-control-range slider" id="position-slider" @onchange="OnChangePosition">
+    </div>
 
-    <div id="position-trackbar"></div>
+    <div id="position-values">
+
+        <span id="position-current">
+            @DisplayTime( RemotePosition )
+        </span>
+        <span>&frasl;</span>
+        <span id="position-max">
+            @DisplayTime( RemoteDuration )
+        </span>
+    </div>
+
+    <div type="button" class="btn btn-primary" @onclick="GotoBrowse">Browse</div>
 
 </div>
 
-<hr />
-
-<ul id="catalogus">
-    @foreach ( var movie in MovieCatalogus )
-    {
-        <li>@movie.Title</li>
-    }
-</ul>
-
 @code {
-    private string videoUrl = "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_30mb.mp4";
+
+    public async void OnClickBackward()
+    {
+        await Sender.RequestChangePosition( RemotePosition - 10 );
+    }
+
+    public async void OnClickPlay()
+    {
+        Player.Playstate request = RemotePlaystate == Player.Playstate.Play ? Player.Playstate.Pause : Player.Playstate.Play;
+        await Sender.RequestChangePlaystate( request );
+    }
+
+    public async void OnClickForward()
+    {
+        await Sender.RequestChangePosition( RemotePosition + 10 );
+    }
+
+    private string DisplayTime( double value )
+    {
+        int val = (int)value;
+
+        int hours = val / 3600;
+        val -= hours * 3600;
+
+        int minutes = val / 60;
+        val -= minutes * 60;
+
+        if ( hours > 0 )
+            return $"{hours}:{minutes:d2}:{val:d2}";
+
+        return $"{minutes:d2}:{val:d2}";
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,6 +73,27 @@
 
     private async Task Send()
     {
-        await Sender.RequestPlayResourceAsync( videoUrl );
+        await Sender.RequestPlayResourceAsync( null );
+    }
+
+    public async void OnSelect( string moviePath )
+    {
+        await Sender.RequestPlayResourceAsync( moviePath );
+    }
+
+    public async void OnChangePosition( ChangeEventArgs args )
+    {
+        string strValue = args?.Value?.ToString() ?? string.Empty;
+        if ( !double.TryParse( strValue, out double value ) )
+        {
+            return;
+        }
+
+        await Sender.RequestChangePosition( value );
+    }
+
+    public void GotoBrowse()
+    {
+        NavigationManager.NavigateTo( "/browse" );
     }
 }

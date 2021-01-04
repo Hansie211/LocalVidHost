@@ -1,5 +1,7 @@
 ﻿"use strict";
 
+console.log("LOL");
+
 window.page = {
 
 	init: function (pageInstance) {

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataTransferObjectLibrary\DataTransferObjectLibrary.csproj" />
+    <ProjectReference Include="..\Packages.SettingsLib\Packages.SettingsLib.csproj" />
   </ItemGroup>
 
 </Project>

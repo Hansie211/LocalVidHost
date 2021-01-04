@@ -6,14 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace BlazorApp.Connection.Server
 {
     public class ServerPage : MasterPage<ServerConnectionSender>
     {
-        public string ResourceLocation { get; set; }
+        public string MoviePath { get; set; }
         public Playstate Playstate { get; set; }
         public double Position { get; set; }
+        public double Duration { get; set; }
 
         protected override async Task InitAsync()
         {
@@ -21,19 +23,23 @@ namespace BlazorApp.Connection.Server
         }
 
         [CallableMethod]
-        public async Task PlayResource( string resourceLocation )
+        public async Task PlayResource( string moviePath )
         {
-            ResourceLocation = resourceLocation;
-
-            await JS.InvokeAsync<object>( "OnUpdateVideoSource", resourceLocation );
+            MoviePath   = moviePath;
+            await JS.InvokeAsync<object>( "OnUpdateVideoSource", "/Storage/" + moviePath );
             await ChangePlaystate( Playstate.Play );
 
-            await Sender.UpdateSource( resourceLocation );
+            await Sender.UpdateSource( MoviePath );
         }
 
         [CallableMethod]
         public async Task ChangePlaystate( Playstate state )
         {
+            if (string.IsNullOrEmpty(MoviePath) )
+            {
+                return;
+            }
+
             Playstate = state;
 
             await JS.InvokeAsync<object>( "SetPlaystate", state );
@@ -43,15 +49,15 @@ namespace BlazorApp.Connection.Server
         [CallableMethod]
         public async Task ChangePosition( double value )
         {
-            Position = value;
+            Position = Math.Clamp( value, 0, Duration );
 
-            await JS.InvokeAsync<object>( "SetPosition", value );
+            await JS.InvokeAsync<object>( "SetPosition", Position );
         }
 
         [CallableMethod]
         public async Task ServeInitialInfo( string connectionId )
         {
-            await Sender.ServeInitialInfo( connectionId, ResourceLocation, Playstate, Position );
+            await Sender.ServeInitialInfo( connectionId, MoviePath, Playstate, Position, Duration );
         }
 
         [JSInvokable( "OnUpdatePosition" )]
@@ -60,6 +66,14 @@ namespace BlazorApp.Connection.Server
             Position = value;
 
             await Sender.RequestUpdatePosition( value );
+        }
+
+        [JSInvokable( "OnUpdateDuration" )]
+        public async Task OnUpdateDuration( double value )
+        {
+            Duration = value;
+
+            await Sender.RequestUpdateDuration( value );
         }
     }
 }

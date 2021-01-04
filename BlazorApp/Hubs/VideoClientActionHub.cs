@@ -21,15 +21,20 @@ namespace BlazorApp.Hubs
             await Clients.All.SendAsync( nameof( RemoteReceiver.OnPositionChanged ), value );
         }
 
-        public async Task RequestUpdateSourceAsync( string resourceLocation )
+        public async Task RequestUpdateDurationAsync( double value )
         {
-            await Clients.All.SendAsync( nameof( RemoteReceiver.OnSourceChanged ), resourceLocation );
+            await Clients.All.SendAsync( nameof( RemoteReceiver.OnDurationChanged), value );
         }
 
-        public async Task RequestSetInitialInfoAsync( string connectionId, string resourceLocation, Playstate playstate, double position )
+        public async Task RequestUpdateSourceAsync( string moviePath )
+        {
+            await Clients.All.SendAsync( nameof( RemoteReceiver.OnSourceChanged ), moviePath );
+        }
+
+        public async Task RequestSetInitialInfoAsync( string connectionId, string moviePath, Playstate playstate, double position, double duration )
         {
             var client = Clients.Client( connectionId );
-            await client?.SendAsync( nameof( RemoteReceiver.SetInitialInfo ), resourceLocation, playstate, position );
+            await client?.SendAsync( nameof( RemoteReceiver.SetInitialInfo ), moviePath, playstate, position, duration );
         }
 
     }

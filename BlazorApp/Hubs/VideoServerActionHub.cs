@@ -11,9 +11,9 @@ namespace BlazorApp.Hubs
     {
         private readonly BlazorApp.Connection.Server.ServerPage RemoteReceiver = null;
 
-        public async Task RequestPlayResourceAsync( string resourceLocation )
+        public async Task RequestPlayResourceAsync( string moviePath )
         {
-            await Clients.All.SendAsync( nameof( RemoteReceiver.PlayResource ), resourceLocation );
+            await Clients.All.SendAsync( nameof( RemoteReceiver.PlayResource ), moviePath );
         }
 
         public async Task RequestChangePlaystateAsync( Playstate state )

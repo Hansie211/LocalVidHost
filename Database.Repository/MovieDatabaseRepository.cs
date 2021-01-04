@@ -40,6 +40,21 @@ namespace Database.Repository
             return this.Single( o => o.ID == id );
         }
 
+        public TEntity GetOrDefault( Guid id )
+        {
+            return this.FirstOrDefault( o => o.ID == id );
+        }
+
+        public TEntity GetOrDefault( Guid? id )
+        {
+            if ( id is null )
+            {
+                return null;
+            }
+
+            return GetOrDefault( id.Value );
+        }
+
         public IEnumerable<TEntity> GetAll()
         {
             return this;

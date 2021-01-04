@@ -4,7 +4,9 @@ using Database.General.Interfaces.Repository.Generic;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Database.Repository
@@ -19,14 +21,21 @@ namespace Database.Repository
             MovieMetadatas      = new MovieDatabaseRepository<MovieMetadata>( _MovieMetadatas );
             Subtitles           = new MovieDatabaseRepository<Subtitle>( _Subtitles );
             Users               = new MovieDatabaseRepository<User>( _Users );
+            Series              = new MovieDatabaseRepository<Serie>( _Series );
 
             Initialize();
         }
 
         private void Initialize()
         {
-
+            // this.Database.EnsureDeleted();
             this.Database.EnsureCreated();
+
+            var x = _Series.Include( o => o.Episodes ).FirstOrDefault();
+
+
+
+            Console.WriteLine( x?.ToString() );
 
             if ( this._Movies.Any() )
             {
@@ -34,19 +43,48 @@ namespace Database.Repository
             }
 
             var lang = new Language(){ Name = "English" };
-            _Languages.Add( lang );
+            var genre = new Genre(){ Name = "Detective" };
 
+            //const string path = @"D:\Data\Downloads\Torrents\Agatha Christie - Poirot- The Complete Series";
+            var series = new Serie(){ Title = "Poirot", Episodes = new List<Episode>() };
+            _Series.Add( series );
 
-            _Movies.Add( new Movie() {
-                Filename = "temp.mp4",
-                Genres = new List<Genre>(),
-                IMDBIndex = "www.imdb.com",
-                Language = lang,
-                ReleaseDate = DateTime.Now.AddDays( -100 ),
-                Title = "A Test Movie",
-            } );
+            Regex regularExpression = new Regex( @"^Poirot S(\d+)e(\d+).+? (.*?)[\(-].*$", RegexOptions.Compiled );
 
-            SaveChanges();
+            foreach ( var file in Directory.GetFiles( path ) )
+            {
+                string name = Path.GetFileNameWithoutExtension( file );
+                var matches = regularExpression.Matches( name );
+
+                Console.Write( $"{name,-75} => " );
+
+                Match match = matches.First() as Match;
+
+                int seasonIndex     = int.Parse( match.Groups[ 1 ].Value );
+                int episodeIndex    = int.Parse( match.Groups[ 2 ].Value );
+
+                string episodeName = match.Groups[ 3 ].Value.Trim();
+
+                var episode = new Episode(){
+                    Genres = new List<Genre>(){ genre },
+                    IMDBIndex = null,
+                    Language = lang,
+                    Number = episodeIndex,
+                    Season = seasonIndex,
+                    ReleaseDate = DateTime.MinValue,
+                    Title = episodeName,
+                };
+
+                series.Episodes.Add( episode );
+                SaveChanges();
+
+                episode.Filename            = $"Movies/{ episode.ID }.mp4";
+                episode.ThumbnailFilename   = $"Thumbnails/{ episode.ID }.png";
+
+                File.Move( file, @$"X:\LocalVidHost\BlazorApp\Storage\{ episode.Filename }" );
+                SaveChanges();
+            }
+
         }
 
         private DbSet<Movie> _Movies { get; set; }
@@ -55,6 +93,7 @@ namespace Database.Repository
         private DbSet<MovieMetadata> _MovieMetadatas { get; set; }
         private DbSet<Subtitle> _Subtitles { get; set; }
         private DbSet<User> _Users { get; set; }
+        private DbSet<Serie> _Series { get; set; }
 
         public IRepository<Movie> Movies { get; }
         public IRepository<Genre> Genres { get; }
@@ -62,6 +101,7 @@ namespace Database.Repository
         public IRepository<MovieMetadata> MovieMetadatas { get; }
         public IRepository<Subtitle> Subtitles { get; }
         public IRepository<User> Users { get; }
+        public IRepository<Serie> Series { get; }
 
         public async Task SaveAsync()
         {

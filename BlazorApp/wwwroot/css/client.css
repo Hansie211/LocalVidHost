@@ -1,2 +1,15 @@
-﻿body {
+﻿#screen-client #title {
+    min-height: 35px;
+}
+
+#screen-client #control-bar {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#screen-client #position-slider {
+    margin-bottom: 10px;
+    width: 100%; /* Full-width */
+    height: 25px; /* Specified height */
 }

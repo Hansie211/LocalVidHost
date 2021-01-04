@@ -1,15 +1,12 @@
 using BlazorApp.Connection.Client;
 using BlazorApp.Connection.Server;
 using BlazorApp.Hubs;
-using Catalogus.Movie;
-using Database.Entities.Interfaces;
-using Database.Repository;
+using Catalogus.Movies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -17,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,9 +37,6 @@ namespace BlazorApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            //
-            services.AddDbContext<MovieDatabaseContext>( options => options.UseSqlite( Configuration.GetConnectionString( "SqliteMovieDb" ), b => b.MigrationsAssembly( "BlazorApp" ) ) );
-            services.AddScoped<IRepositoryContext>( (provider) => provider.GetService<MovieDatabaseContext>() );
             services.AddScoped<MovieCatalogus>();
 
             services.AddSignalR();
@@ -61,11 +56,13 @@ namespace BlazorApp
                 app.UseHsts();
             }
 
+            Trace.WriteLine( $"Movie path: { SettingsLib.MainSettings.Instance.MoviePath }" );
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseStaticFiles( new StaticFileOptions() {
-                FileProvider = new PhysicalFileProvider( Path.Combine( Directory.GetCurrentDirectory(), @"Storage" ) ),
+                FileProvider = new PhysicalFileProvider( SettingsLib.MainSettings.Instance.MoviePath ),
                 RequestPath =  "/Storage",
             } );
 

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Database.Entities.Interfaces;
+using Catalogus.Movies;
 
 namespace BlazorApp.Components
 {
@@ -22,6 +22,10 @@ namespace BlazorApp.Components
 
         [Inject]
         protected NavigationManager NavigationManager { get; set; }
+
+        [Inject]
+        protected MovieCatalogus Catalogus { get; set; }
+
 
         private static void RegisterMethods( MasterPage<TSender> listener )
         {

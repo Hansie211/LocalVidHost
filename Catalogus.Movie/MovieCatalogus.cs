@@ -1,29 +1,34 @@
-﻿using Database.Entities.Interfaces;
-using DataTransferObjectLibrary;
-using System;
+﻿using SettingsLib;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
-namespace Catalogus.Movie
+namespace Catalogus.Movies
 {
-    public class MovieCatalogus : IEnumerable<MovieDto>
+    public partial class MovieCatalogus
     {
-        private IRepositoryContext ctx;
+        private static readonly string[] SupportedExtensions = {
+            "WEBM", "MP4", "OGG", 
+            //"MPG", "MP2", "MPEG", "MPE", "MPV", "M4P", "M4V", "AVI", "MMV", "MOV", "QT", "FLV", "SWF" 
+            };
 
-        public MovieCatalogus( IRepositoryContext _ctx )
+        public MovieCatalogus()
         {
-            ctx = _ctx;
         }
 
-        public IEnumerator<MovieDto> GetEnumerator()
+        public IEnumerable<string> GetSubfolders( string path )
         {
-            return ctx.Movies.Select( o => DTOMapper.ToMovieDTO(o) ).GetEnumerator();
+            path = MainSettings.Instance.GetMovieCompletePath( path );
+
+            return Directory.GetDirectories( path ).Select( o => Path.GetFileName( o ) ).OrderByNatural( o => o );
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public IEnumerable<string> GetMovies( string path )
         {
-            return GetEnumerator();
+            path = MainSettings.Instance.GetMovieCompletePath( path );
+
+            return Directory.GetFiles( path ).Where( filename => SupportedExtensions.Any( ext => filename.ToUpper().EndsWith( '.' + ext ) ) ).Select( o => Path.GetFileName( o ) ).OrderByNatural( o => o );
         }
     }
 }

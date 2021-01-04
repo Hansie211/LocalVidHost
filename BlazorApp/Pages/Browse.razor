@@ -1,0 +1,49 @@
+﻿@page "/browse"
+@using BlazorApp.Connection.Client;
+@inherits BrowsePage;
+
+<div id="screen-browse" class="screen">
+    <div id="header">
+        <h3 id="title"><div>Current folder:</div><div>@CurrentFolder</div></h3>
+        <button id="nav-up" type="button" class="btn btn-primary" @onclick="GoBack">Previous folder</button>
+    </div>
+
+    <ul id="catalogus">
+        @foreach ( var item in Catalogus.GetSubfolders( CurrentFolder ) )
+        {
+            <li class="catalogus-item folder-item" @onclick="(() => OnSelectFolder(item))">@item</li>
+        }
+        @foreach ( var item in Catalogus.GetMovies( CurrentFolder ) )
+        {
+            <li class="catalogus-item movie-item" @onclick="(() => OnSelectMovie( item))">@item</li>
+        }
+    </ul>
+</div>
+
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        // await Context.SaveAsync();
+        await InitAsync();
+    }
+
+    public void OnSelectFolder( string moviePath )
+    {
+        AscendCurrentFolder( moviePath );
+        this.StateHasChanged();
+    }
+
+    public async void OnSelectMovie( string moviePath )
+    {
+        await Sender.RequestPlayResourceAsync( GetFilePath( moviePath ) );
+        NavigationManager.NavigateTo( "/" );
+    }
+
+    public void GoBack()
+    {
+        DescendCurrentFolder();
+    }
+
+}

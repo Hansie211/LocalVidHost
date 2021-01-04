@@ -15,5 +15,6 @@ namespace Database.Entities.Interfaces
         public IRepository<MovieMetadata> MovieMetadatas { get; }
         public IRepository<Subtitle> Subtitles { get; }
         public IRepository<User> Users { get; }
+        public IRepository<Serie> Series { get; }
     }
 }

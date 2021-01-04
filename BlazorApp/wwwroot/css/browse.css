@@ -1,0 +1,43 @@
+#screen-browse #header {
+    width: 100%;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+#screen-browse #title {
+    width: 100%;
+}
+
+#screen-browse #title > div {
+    min-height: 35px;
+}
+
+#screen-browse #catalogus {
+    width: 100%;
+    list-style: none;
+    display: block;
+    padding: 0;
+    border-top: 1px solid black;
+}
+
+#screen-browse .catalogus-item {
+
+    width: 100%;
+    padding: 18px;
+    font-size: 16px;
+
+    border-bottom: 1px solid black;
+}
+
+#screen-browse .catalogus-item > a {
+    width: 100%;
+    cursor: pointer;
+}
+
+#screen-browse .movie-item {
+}
+
+#screen-browse .folder-item {
+
+    font-weight: bold;
+}
