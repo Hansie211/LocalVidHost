@@ -3,7 +3,7 @@ using Database.General.Interfaces;
 
 namespace Database.General
 {
-    public abstract class DatabaseRecord
+    public abstract class DatabaseRecord : IDatabaseRecord
     {
         public Guid ID { get; set; }
 
