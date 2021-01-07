@@ -1,7 +1,7 @@
 ﻿using Packages.UniversalMovieDatabase.Interfaces;
 using Packages.IMDBUpdate.Entities;
 using Packages.IMDBUpdate.Extensions;
-using Packcages.TSV.Generics;
+using Packages.TSV.Generics;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Packages.UniversalMovieDatabase.Interfaces\Packages.UniversalMovieDatabase.Interfaces.csproj" />
-    <ProjectReference Include="..\Packcages.TSV\Packcages.TSV.csproj" />
+    <ProjectReference Include="..\Packcages.TSV\Packages.TSV.csproj" />
   </ItemGroup>
 
   <ItemGroup>
