@@ -10,8 +10,12 @@ Welcome to your new app.
 
 @code {
 
+#if DEBUG
+#pragma warning disable CS1998
     protected override async Task OnInitializedAsync()
     {
-
+        //
     }
+#pragma warning restore CS1998
+#endif
 } 
