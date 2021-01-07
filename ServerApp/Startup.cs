@@ -1,4 +1,6 @@
+using Database.Entities.Interfaces;
 using Database.Repository;
+using Database.UniversalMovieDatabase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +32,10 @@ namespace ServerApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
+            services.AddDbContext<UniversalMovieDatabaseContext>( options => options.UseSqlite( Configuration.GetConnectionString( "UniversalMovieDatabase" ) ) );
+
             services.AddDbContext<MovieDatabaseContext>( options => options.UseSqlite( Configuration.GetConnectionString( "SqliteMovieDb" ), b => b.MigrationsAssembly( "ServerApp" ) ) );
+            services.AddScoped<IRepositoryContext>( provider => provider.GetService<MovieDatabaseContext>() );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

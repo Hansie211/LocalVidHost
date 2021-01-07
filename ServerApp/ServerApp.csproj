@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Database.Repository\Database.Repository.csproj" />
+    <ProjectReference Include="..\Database.UniversalMovieDatabase\Database.UniversalMovieDatabase.csproj" />
   </ItemGroup>
 
 </Project>

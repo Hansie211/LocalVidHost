@@ -1,6 +1,17 @@
 ﻿@page "/"
+@using Database.Entities.Interfaces;
+@using Database.UniversalMovieDatabase;
+@inject IRepositoryContext ctx;
+@inject UniversalMovieDatabaseContext MovieCtx;
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
 
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+} 

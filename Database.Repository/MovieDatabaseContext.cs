@@ -26,6 +26,7 @@ namespace Database.Repository
         private void Initialize()
         {
 
+            this.Database.EnsureDeleted();
             this.Database.EnsureCreated();
 
             if ( this._Movies.Any() )
