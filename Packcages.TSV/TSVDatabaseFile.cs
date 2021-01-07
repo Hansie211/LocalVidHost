@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Packcages.TSV
+namespace Packages.TSV
 {
     public class TSVDatabaseFile : IDisposable
     {

@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "ClientApp\Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packages.IMDBUpdate", "Packages.IMDBUpdate\Packages.IMDBUpdate.csproj", "{241C0EFA-E2D2-469E-86DC-0C2802AE1848}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packcages.TSV", "Packcages.TSV\Packcages.TSV.csproj", "{C1FD5560-FF48-442A-B3EE-CB5D65E566E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packages.TSV", "Packcages.TSV\Packages.TSV.csproj", "{C1FD5560-FF48-442A-B3EE-CB5D65E566E5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packages.UniversalMovieDatabase.Interfaces", "Packages.UniversalMovieDatabase.Interfaces\Packages.UniversalMovieDatabase.Interfaces.csproj", "{235180F8-F37F-4485-943E-6ABFB72B8E62}"
 EndProject

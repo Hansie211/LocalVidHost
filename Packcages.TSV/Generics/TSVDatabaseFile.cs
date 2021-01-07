@@ -1,4 +1,4 @@
-﻿using Packcages.TSV.Attributes;
+﻿using Packages.TSV.Attributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Packcages.TSV.Generics
+namespace Packages.TSV.Generics
 {
     public class TSVDatabaseFile<TEntity> : TSVDatabaseFile, IEnumerable<TEntity> where TEntity : new()
     {
