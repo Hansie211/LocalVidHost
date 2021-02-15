@@ -1,5 +1,5 @@
 ﻿using Packages.UniversalMovieDatabase.Interfaces;
-using Packages.IMDBUpdate.Entities;
+using Packages.UniversalMovieDatabase.Interfaces.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +45,7 @@ namespace Packages.IMDBUpdate.Extensions
             movie.Title             = imdbTitle.DisplayTitle;
         }
 
-        public static void LoadGenresFromTitle( this Movie movie, TSVItems.Title imdbTitle, IEnumerable<IGenre> genreList )
+        public static void LoadGenresFromTitle( this Movie movie, TSVItems.Title imdbTitle, IEnumerable<Genre> genreList )
         {
             movie.Genres = genreList.Where( o => imdbTitle.Genres.Any( genreName => genreName.Equals( o.Name ) ) ).ToArray();
         }

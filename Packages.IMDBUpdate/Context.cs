@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Packages.IMDBUpdate.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Packages.UniversalMovieDatabase.Interfaces.Concrete;
 
 namespace Packages.IMDBUpdate
 {

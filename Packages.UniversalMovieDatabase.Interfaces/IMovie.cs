@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Packages.UniversalMovieDatabase.Interfaces.Concrete;
+using System;
 using System.Collections.Generic;
 
 namespace Packages.UniversalMovieDatabase.Interfaces
@@ -10,6 +11,6 @@ namespace Packages.UniversalMovieDatabase.Interfaces
         
         public int? RuntimeMinutes { get; }
 
-        public IEnumerable<IGenre> Genres { get; }
+        public IEnumerable<Genre> Genres { get; }
     }
 }

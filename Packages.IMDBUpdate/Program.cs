@@ -1,5 +1,4 @@
 ﻿using Packages.UniversalMovieDatabase.Interfaces;
-using Packages.IMDBUpdate.Entities;
 using Packages.IMDBUpdate.Extensions;
 using Packages.TSV.Generics;
 using System;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
+using Packages.UniversalMovieDatabase.Interfaces.Concrete;
 
 namespace Packages.IMDBUpdate
 {
@@ -27,7 +27,7 @@ namespace Packages.IMDBUpdate
             }
         }
 
-        private static IEnumerable<IEpisode> GetEpisodes( IEnumerable<IGenre> genreList, IEnumerable<TSVItems.Episode> rawEpisodes )
+        private static IEnumerable<Episode> GetEpisodes( IEnumerable<Genre> genreList, IEnumerable<TSVItems.Episode> rawEpisodes )
         {
             foreach ( var rawEpisode in rawEpisodes )
             {

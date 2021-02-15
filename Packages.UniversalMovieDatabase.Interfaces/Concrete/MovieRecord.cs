@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Packages.IMDBUpdate.Entities
+namespace Packages.UniversalMovieDatabase.Interfaces.Concrete
 {
-    public abstract class IMDBRecord : IMovieRecord
+    public abstract class MovieRecord : IMovieRecord
     {
         public Guid ID { get; set; }
         public string IMDBIdentiefier { get; set; }

@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Packages.UniversalMovieDatabase.Interfaces;
+using Packages.UniversalMovieDatabase.Interfaces.Concrete;
 using System;
 
 namespace Database.UniversalMovieDatabase
 {
     public class UniversalMovieDatabaseContext : DbContext
     {
-        public DbSet<IMovie> Movies { get; set; }
-        public DbSet<IEpisode> Episodes { get; set; }
-        public DbSet<ISerie> Series { get; set; }
-        public DbSet<IGenre> Genres { get; set; }
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<Episode> Episodes { get; set; }
+        public DbSet<Serie> Series { get; set; }
+        public DbSet<Genre> Genres { get; set; }
     }
 }

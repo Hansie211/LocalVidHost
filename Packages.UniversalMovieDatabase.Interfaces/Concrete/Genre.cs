@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Packages.IMDBUpdate.Entities
+namespace Packages.UniversalMovieDatabase.Interfaces.Concrete
 {
     public class Genre : IGenre
     {
